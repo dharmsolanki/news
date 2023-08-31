@@ -25,8 +25,9 @@ export class News extends Component {
     };
   }
 
-  async componentDidMount() {
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=54185d6ce85b416eb42e20361b29436e&pageSize=${this.props.pageSize}`;
+  async updateNews() {
+
+    const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=54185d6ce85b416eb42e20361b29436e&page=${this.state.page}&pageSize=${this.props.pageSize}`;
     this.setState({ loading: true });
     let data = await fetch(url);
     let parseData = await data.json();
@@ -35,58 +36,77 @@ export class News extends Component {
       totalResults: parseData.totalResults,
       loading: false,
     });
+
+  }
+
+  async componentDidMount() {
+    // let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=54185d6ce85b416eb42e20361b29436e&page=1&pageSize=${this.props.pageSize}`;
+    // this.setState({ loading: true });
+    // let data = await fetch(url);
+    // let parseData = await data.json();
+    // this.setState({
+    //   articles: parseData.articles,
+    //   totalResults: parseData.totalResults,
+    //   loading: false,
+    // });
+
+    this.updateNews();
   }
 
   handlePrevClick = async () => {
-    let url = `https://newsapi.org/v2/top-headlines?country=${
-      this.props.country
-    }&category=${
-      this.props.category
-    }&apiKey=54185d6ce85b416eb42e20361b29436e&page=${
-      this.state.page - 1
-    }&pageSize=${this.props.pageSize}`;
-    this.setState({ loading: true });
-    let data = await fetch(url);
-    let parseData = await data.json();
+    // let url = `https://newsapi.org/v2/top-headlines?country=${
+    //   this.props.country
+    // }&category=${
+    //   this.props.category
+    // }&apiKey=54185d6ce85b416eb42e20361b29436e&page=${
+    //   this.state.page - 1
+    // }&pageSize=${this.props.pageSize}`;
+    // this.setState({ loading: true });
+    // let data = await fetch(url);
+    // let parseData = await data.json();
 
-    this.setState({
-      page: this.state.page - 1,
-      articles: parseData.articles,
-      loading: false,
-    });
+    // this.setState({
+    //   page: this.state.page - 1,
+    //   articles: parseData.articles,
+    //   loading: false,
+    // });
+
+    this.setState({page:this.state.page - 1})
+    this.updateNews();
   };
 
   handleNextClick = async () => {
-    if (
-      !(
-        this.state.page + 1 >
-        Math.ceil(this.state.totalResults / this.props.pageSize)
-      )
-    ) {
-      let url = `https://newsapi.org/v2/top-headlines?country=${
-        this.props.country
-      }&category=${
-        this.props.category
-      }&apiKey=54185d6ce85b416eb42e20361b29436e&page=${
-        this.state.page + 1
-      }&pageSize=${this.props.pageSize}`;
-      this.setState({ loading: true });
-      let data = await fetch(url);
-      let parseData = await data.json();
+    // if (
+    //   !(
+    //     this.state.page + 1 >
+    //     Math.ceil(this.state.totalResults / this.props.pageSize)
+    //   )
+    // ) {
+    //   let url = `https://newsapi.org/v2/top-headlines?country=${
+    //     this.props.country
+    //   }&category=${
+    //     this.props.category
+    //   }&apiKey=54185d6ce85b416eb42e20361b29436e&page=${
+    //     this.state.page + 1
+    //   }&pageSize=${this.props.pageSize}`;
+    //   this.setState({ loading: true });
+    //   let data = await fetch(url);
+    //   let parseData = await data.json();
 
-      console.log("parseData", parseData);
+    //   console.log("parseData", parseData);
 
-      this.setState({
-        page: this.state.page + 1,
-        articles: parseData.articles,
-        loading: false,
-      });
-    }
+    //   this.setState({
+    //     page: this.state.page + 1,
+    //     articles: parseData.articles,
+    //     loading: false,
+    //   });
+    // }
+
+    this.setState({page:this.state.page + 1})
+    this.updateNews();
   };
 
   render() {
-    {
-    }
     return (
       <div className="container my-4">
         <h2 className="text-center">Top Headlines</h2>
@@ -109,6 +129,12 @@ export class News extends Component {
                         : element.urlToImage
                     }
                     newsUrl={element.url}
+
+                    author={element.author}
+
+                    date={element.publishedAt}
+
+                    source={element.source.name}
                   />
                 </div>
               );
@@ -120,7 +146,8 @@ export class News extends Component {
             type="button"
             disabled={this.state.page <= 1}
             className="btn btn-dark"
-            onClick={this.handlePrevClick}>
+            onClick={this.handlePrevClick}
+          >
             &laquo; Previous
           </button>
           <button
@@ -130,7 +157,8 @@ export class News extends Component {
               Math.ceil(this.state.totalResults / this.props.pageSize)
             }
             className="btn btn-dark"
-            onClick={this.handleNextClick}>
+            onClick={this.handleNextClick}
+          >
             Next &raquo;
           </button>
         </div>
