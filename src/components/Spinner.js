@@ -1,8 +1,7 @@
-import React, { Component } from "react";
+import React from "react";
 import loading from "../loading.gif";
 
-export default class Spinner extends Component {
-  render() {
+const Spinner = () => {
     return (
       <div
         className="d-flex justify-content-center align-items-center"
@@ -11,5 +10,6 @@ export default class Spinner extends Component {
         <img src={loading} alt="loading" height="80px" />
       </div>
     );
-  }
 }
+
+export default Spinner;
